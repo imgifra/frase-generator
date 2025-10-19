@@ -21,10 +21,9 @@
       height: 100vh;
       margin: 0;
       text-align: center;
-      overflow: hidden;
     }
 
-    /* Cuadro cuadrado exacto */
+    /* Cuadro exacto 1080x1080 (sin transform ni escalado) */
     #canvasContainer {
       width: 1080px;
       height: 1080px;
@@ -33,12 +32,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      border-radius: 8px;
+      border-radius: 30px;
       overflow: hidden;
-      position: relative;
-      transform: scale(0.5); /* Escala visual para pantallas */
-      transform-origin: top center;
+      text-align: center;
     }
 
     #output {
@@ -46,8 +42,8 @@
       line-height: 1.2;
       white-space: pre-line;
       word-break: break-word;
-      max-width: 90%;
-      padding: 40px;
+      width: 90%;
+      text-align: center;
     }
 
     .controls {
@@ -106,18 +102,28 @@
       background: #ff9b33;
     }
 
+    /* Escalamos solo visualmente el contenedor, sin afectar html2canvas */
+    #preview {
+      transform: scale(0.35);
+      transform-origin: top center;
+      margin-top: -200px;
+    }
+
     @media (max-width: 800px) {
-      #canvasContainer {
-        transform: scale(0.3);
+      #preview {
+        transform: scale(0.25);
+        margin-top: -300px;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Cuadro de la frase -->
-  <div id="canvasContainer">
-    <div id="output">NachoZorra Generator 🦊</div>
+  <!-- Previsualización reducida -->
+  <div id="preview">
+    <div id="canvasContainer">
+      <div id="output">NachoZorra Generator 🦊</div>
+    </div>
   </div>
 
   <!-- Controles -->
@@ -130,7 +136,7 @@
     <button id="downloadBtn">⬇️ Descargar PNG (1080×1080)</button>
   </div>
 
-  <!-- Librería para convertir a imagen -->
+  <!-- Librería -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
     const input = document.getElementById('textInput');
@@ -139,22 +145,20 @@
     const canvasContainer = document.getElementById('canvasContainer');
     const downloadBtn = document.getElementById('downloadBtn');
 
-    // Actualizar frase automáticamente
     input.addEventListener('input', () => {
       output.textContent = input.value || ' ';
     });
 
-    // Cambiar color de fondo del cuadro
     bgColor.addEventListener('input', () => {
       canvasContainer.style.backgroundColor = bgColor.value;
       output.style.color = getContrastColor(bgColor.value);
     });
 
-    // Descargar imagen cuadrada en 1080x1080
+    // Generar PNG exacto de 1080x1080
     downloadBtn.addEventListener('click', async () => {
       const canvas = await html2canvas(canvasContainer, {
         backgroundColor: null,
-        scale: 1,          // No se escala, mantiene 1080x1080 reales
+        scale: 1,  // resolución 1:1
         width: 1080,
         height: 1080
       });
@@ -165,7 +169,6 @@
       link.click();
     });
 
-    // Determinar color del texto según el fondo
     function getContrastColor(hex) {
       hex = hex.replace('#', '');
       const r = parseInt(hex.substr(0, 2), 16);
