@@ -14,10 +14,10 @@
     }
 
     body {
-      background-color: white;
-      color: black;
+      background-color: #111;
+      color: white;
       font-family: 'Felt Tip Roman', cursive;
-      font-weight: 1000; /* Usa el estilo Bold */
+      font-weight: 700;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -25,16 +25,30 @@
       height: 100vh;
       margin: 0;
       text-align: center;
-      transition: background-color 0.3s ease;
+    }
+
+    /* Cuadro de 1080x1080 */
+    #canvasContainer {
+      width: 540px; /* Escala 50% para pantalla (1080 / 2) */
+      height: 540px;
+      background-color: #fff;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 20px;
     }
 
     #output {
-      font-size: 3em;
+      font-size: 2em;
       line-height: 1.3;
-      white-space: pre-line;
-      padding: 20px;
-      max-width: 90%;
       word-break: break-word;
+      max-width: 90%;
+      text-align: center;
+      white-space: pre-line;
     }
 
     .bottom-controls {
@@ -42,34 +56,33 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(0, 0, 0, 0.9);
       padding: 20px 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      border-top: 1px solid #ccc;
+      border-top: 1px solid #333;
     }
 
     input[type="text"] {
       width: 80%;
       padding: 12px;
       border-radius: 10px;
-      border: 1px solid #aaa;
-      font-size: 1.2em;
+      border: none;
+      font-size: 1.1em;
       text-align: center;
       outline: none;
-      color: #222;
+      margin-bottom: 10px;
       font-family: 'Felt Tip Roman', cursive;
       font-weight: 700;
     }
 
     .color-picker {
-      margin-top: 10px;
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 1em;
-      font-weight: 500;
+      color: #fff;
+      margin-bottom: 10px;
     }
 
     input[type="color"] {
@@ -79,37 +92,84 @@
       cursor: pointer;
     }
 
-    label {
-      color: #333;
-      font-size: 0.9em;
+    button {
+      background: #ff7b00;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #ff9b33;
+    }
+
+    @media (max-width: 600px) {
+      #canvasContainer {
+        width: 90vw;
+        height: 90vw;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="output">NachoZorra Generator 🦊</div>
 
+  <!-- Cuadro de la frase -->
+  <div id="canvasContainer">
+    <div id="output">NachoZorra Generator 🦊</div>
+  </div>
+
+  <!-- Controles -->
   <div class="bottom-controls">
     <input id="textInput" type="text" placeholder="Escribe tu frase..." />
     <div class="color-picker">
-      <label for="bgColor">Color de fondo:</label>
+      <label for="bgColor">Color del fondo:</label>
       <input type="color" id="bgColor" value="#ffffff">
     </div>
+    <button id="downloadBtn">Descargar PNG</button>
   </div>
 
+  <!-- Librería para exportar como imagen -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
     const input = document.getElementById('textInput');
     const output = document.getElementById('output');
     const bgColor = document.getElementById('bgColor');
+    const canvasContainer = document.getElementById('canvasContainer');
+    const downloadBtn = document.getElementById('downloadBtn');
 
+    // Mostrar frase automáticamente
     input.addEventListener('input', () => {
       output.textContent = input.value || ' ';
     });
 
+    // Cambiar color solo dentro del cuadro
     bgColor.addEventListener('input', () => {
-      document.body.style.backgroundColor = bgColor.value;
-      document.body.style.color = getContrastColor(bgColor.value);
+      canvasContainer.style.backgroundColor = bgColor.value;
+      output.style.color = getContrastColor(bgColor.value);
     });
 
+    // Descargar el cuadro como imagen cuadrada 1080x1080
+    downloadBtn.addEventListener('click', async () => {
+      const scale = 2; // duplicar resolución para alta calidad
+      const canvas = await html2canvas(canvasContainer, {
+        backgroundColor: null,
+        scale: scale,
+        width: 540,
+        height: 540
+      });
+
+      const link = document.createElement('a');
+      link.download = 'nachozorra_post.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+
+    // Ajustar color de texto según fondo
     function getContrastColor(hex) {
       hex = hex.replace('#', '');
       const r = parseInt(hex.substr(0, 2), 16);
