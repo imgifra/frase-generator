@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frase Generator 😎</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: 'Comic Neue', cursive;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      margin: 0;
+    }
+    input {
+      width: 70%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      margin: 20px 0;
+      font-size: 1.2em;
+    }
+    #output {
+      font-size: 2.2em;
+      line-height: 1.4;
+      white-space: pre-line;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: white;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Frase Generator 😎</h1>
+  <input id="textInput" type="text" placeholder="Escribe tu frase..." />
+  <button id="generateBtn">Generar</button>
+  <div id="output"></div>
+
+  <script>
+    const input = document.getElementById('textInput');
+    const output = document.getElementById('output');
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      output.textContent = input.value;
+    });
+  </script>
+</body>
+</html>
