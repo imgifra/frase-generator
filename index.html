@@ -22,8 +22,16 @@
     }
 
     h1 {
-      font-size: 2em;
+      font-size: 2.2em;
       margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h1 img {
+      width: 60px;
+      height: auto;
     }
 
     input[type="text"] {
@@ -60,7 +68,10 @@
   </style>
 </head>
 <body>
-  <h1>NachoZorra Generator 🦊.</h1>
+  <h1>
+    <img src="logo.png" alt="Logo NachoZorra">
+    NachoZorra Generator 🦊
+  </h1>
 
   <input id="textInput" type="text" placeholder="Escribe tu frase..." />
 
